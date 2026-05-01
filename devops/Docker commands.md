@@ -1,27 +1,29 @@
 # 🐳 Docker Basics – Complete Cheat Sheet
 
-A simple, beginner-friendly reference for Docker commands and concepts.  
-This file is meant for quick revision while building and debugging projects.
+A beginner → intermediate level Docker reference file.  
+This README covers **most commonly used Docker commands, concepts, and workflows** needed for real-world development and DevOps basics.
 
 ---
 
 ## 📌 What is Docker?
 
-Docker is a containerization platform that allows you to package applications along with their dependencies into lightweight, portable containers.
+Docker is a containerization platform that allows you to package applications with all dependencies into **portable, lightweight containers**.
 
-👉 Instead of “it works on my machine”, Docker ensures:
-- Same environment everywhere
-- Faster development & deployment
-- Isolation between applications
+### 🚀 Why Docker?
+
+- Works the same across all environments  
+- Eliminates "works on my machine" problem  
+- Faster setup & deployment  
+- Isolation between applications  
 
 ---
 
-## ⚙️ Basic Docker Workflow
+## ⚙️ Basic Workflow
 
-1. Pull an image from Docker Hub  
-2. Run a container from that image  
-3. Interact, debug, and manage it  
-4. Stop and remove when done  
+1. Pull an image  
+2. Run a container  
+3. Debug & interact  
+4. Stop & remove  
 
 ---
 
@@ -29,7 +31,7 @@ Docker is a containerization platform that allows you to package applications al
 
 ---
 
-### 📦 1. Container Management
+## 📦 1. Container Management
 
 | Action | Command |
 |--------|--------|
@@ -40,17 +42,29 @@ Docker is a containerization platform that allows you to package applications al
 | Run with name | `docker run -d --name myapp <image>` |
 | Run with port mapping | `docker run -p 3000:3000 <image>` |
 | Run with env variables | `docker run -e NODE_ENV=prod <image>` |
-| Start stopped container | `docker start <container>` |
+| Start container | `docker start <container>` |
 | Stop container | `docker stop <container>` |
 | Restart container | `docker restart <container>` |
 | Pause container | `docker pause <container>` |
 | Unpause container | `docker unpause <container>` |
 | Remove container | `docker rm <container>` |
-| Remove running container | `docker rm -f <container>` |
+| Force remove | `docker rm -f <container>` |
+| Rename container | `docker rename old new` |
 
 ---
 
-### 🖼️ 2. Image Management
+## 🔄 2. Container Interaction
+
+| Action | Command |
+|--------|--------|
+| Execute command inside container | `docker exec -it <container> bash` |
+| Attach to container | `docker attach <container>` |
+| Copy host → container | `docker cp file.txt <container>:/app` |
+| Copy container → host | `docker cp <container>:/app/file.txt .` |
+
+---
+
+## 🖼️ 3. Image Management
 
 | Action | Command |
 |--------|--------|
@@ -58,12 +72,24 @@ Docker is a containerization platform that allows you to package applications al
 | Pull image | `docker pull <image>` |
 | Build image | `docker build -t myapp .` |
 | Remove image | `docker rmi <image>` |
-| Remove all images | `docker rmi $(docker images -q)` |
 | Tag image | `docker tag myapp user/myapp:v1` |
+| Push image | `docker push user/myapp` |
+| Login Docker Hub | `docker login` |
 
 ---
 
-### 📂 3. Volume & Storage
+## 🧱 4. Image Advanced
+
+| Action | Command |
+|--------|--------|
+| Save image | `docker save -o myimage.tar <image>` |
+| Load image | `docker load -i myimage.tar` |
+| Image history | `docker history <image>` |
+| Inspect image | `docker inspect <image>` |
+
+---
+
+## 📂 5. Volumes & Storage
 
 | Action | Command |
 |--------|--------|
@@ -75,32 +101,64 @@ Docker is a containerization platform that allows you to package applications al
 
 ---
 
-### 🌐 4. Network Management
+## 🌐 6. Network Management
 
 | Action | Command |
 |--------|--------|
 | List networks | `docker network ls` |
 | Create network | `docker network create mynet` |
 | Inspect network | `docker network inspect mynet` |
-| Connect container to network | `docker network connect mynet <container>` |
+| Connect container | `docker network connect mynet <container>` |
+| Disconnect container | `docker network disconnect mynet <container>` |
 
 ---
 
-### 🛠️ 5. Logs & Debugging
+## 🛠️ 7. Logs & Debugging
 
 | Action | Command |
 |--------|--------|
 | View logs | `docker logs <container>` |
-| Follow logs (live) | `docker logs -f <container>` |
-| Execute inside container | `docker exec -it <container> bash` |
+| Follow logs | `docker logs -f <container>` |
 | Inspect container | `docker inspect <container>` |
-| Check resource usage | `docker stats` |
 | Show processes | `docker top <container>` |
+| Resource usage | `docker stats` |
+| Container changes | `docker diff <container>` |
 
 ---
 
-### ⚡ 6. Bulk Cleanup (⚠️ Use Carefully)
+## ⚡ 8. System & Cleanup
 
-#### Stop all running containers
-```bash
-docker stop $(docker ps -q)
+⚠️ Use carefully
+
+| Action | Command |
+|--------|--------|
+| Stop all containers | `docker stop $(docker ps -q)` |
+| Remove all containers | `docker rm -f $(docker ps -aq)` |
+| Remove all images | `docker rmi $(docker images -q)` |
+| Disk usage | `docker system df` |
+| Clean unused data | `docker system prune` |
+| Full cleanup | `docker system prune -a` |
+| Remove unused volumes | `docker volume prune` |
+| Remove unused networks | `docker network prune` |
+
+---
+
+## 📄 9. Dockerfile Basics
+
+| Instruction | Purpose |
+|------------|--------|
+| FROM | Base image |
+| WORKDIR | Working directory |
+| COPY | Copy files |
+| RUN | Execute commands |
+| CMD | Default command |
+| EXPOSE | Define port |
+
+### Example Dockerfile
+
+```dockerfile
+FROM node:18
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["npm", "start"]
